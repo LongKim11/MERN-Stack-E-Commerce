@@ -7,6 +7,19 @@ import { Link } from "react-router-dom";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [data, setData] = useState({ email: "", password: "" });
+
+  const handleDataChange = (e) => {
+    const { name, value } = e.target;
+    setData((prev) => {
+      return { ...prev, [name]: value };
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(data);
+  };
 
   return (
     <section id="login">
@@ -16,7 +29,7 @@ const Login = () => {
             <img src={loginIcon} alt="login icon"></img>
           </div>
 
-          <form className="pt-5">
+          <form className="pt-6 flex flex-col gap-2" onSubmit={handleSubmit}>
             <div>
               <label>Email:</label>
               <div className="bg-slate-100 p-2">
@@ -24,6 +37,9 @@ const Login = () => {
                   type="email"
                   placeholder="Enter your email"
                   className="w-full h-full outline-none bg-transparent"
+                  name="email"
+                  value={data.email}
+                  onChange={handleDataChange}
                 ></input>
               </div>
             </div>
@@ -34,6 +50,9 @@ const Login = () => {
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter your password"
                   className="w-full h-full outline-none bg-transparent"
+                  name="password"
+                  value={data.password}
+                  onChange={handleDataChange}
                 ></input>
 
                 <div
