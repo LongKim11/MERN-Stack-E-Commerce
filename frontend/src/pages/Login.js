@@ -3,11 +3,15 @@ import loginIcon from "../assets/signin.gif";
 import { FaEye } from "react-icons/fa";
 import { useState } from "react";
 import { FaEyeSlash } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import summaryAPI from "../common";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [data, setData] = useState({ email: "", password: "" });
+  const navigate = useNavigate();
 
   const handleDataChange = (e) => {
     const { name, value } = e.target;
@@ -18,7 +22,22 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(data);
+
+    axios
+      .post(summaryAPI.signIn.url, data, { withCredentials: true })
+      .then((res) => {
+        if (res.data.success) {
+          toast.success(res.data.message);
+          navigate("/");
+        } else {
+          toast.error(res.data.message);
+        }
+        console.log(res);
+      })
+      .catch((err) => {
+        toast.error("Something went wrong");
+        console.log(err);
+      });
   };
 
   return (

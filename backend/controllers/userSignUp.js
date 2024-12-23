@@ -5,6 +5,12 @@ async function userSignUpController(req, res) {
   try {
     const { name, email, password } = req.body;
 
+    const user = await userModel.findOne({ email });
+
+    if (user) {
+      throw new Error("User already exists");
+    }
+
     if (!name) {
       throw new Error("Name is required");
     }
@@ -18,7 +24,7 @@ async function userSignUpController(req, res) {
     }
 
     const salt = bcrypt.genSaltSync(10);
-    const hashPassword = await bcrypt.hashSync(password, salt);
+    const hashPassword = bcrypt.hashSync(password, salt);
 
     if (!hashPassword) {
       throw new Error("Password hashing failed");
@@ -26,11 +32,12 @@ async function userSignUpController(req, res) {
 
     const payload = {
       ...req.body,
+      role: "GENERAL",
       password: hashPassword,
     };
 
     const newUser = new userModel(payload);
-    const savedUser = newUser.save();
+    const savedUser = await newUser.save();
 
     res.status(201).json({
       data: savedUser,
@@ -39,7 +46,7 @@ async function userSignUpController(req, res) {
       message: "User created successfully",
     });
   } catch (err) {
-    res.json({ message: err, error: true, success: false });
+    res.json({ message: err.message || err, error: true, success: false });
   }
 }
 
