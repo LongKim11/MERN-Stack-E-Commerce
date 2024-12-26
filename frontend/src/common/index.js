@@ -17,6 +17,14 @@ const summaryAPI = {
     url: `${backendDomain}/api/user-details`,
     method: "GET",
   },
+  allUsers: {
+    url: `${backendDomain}/api/all-users`,
+    method: "GET",
+  },
+  updateUser: {
+    url: `${backendDomain}/api/update-user`,
+    method: "POST",
+  },
 };
 
 export default summaryAPI;
