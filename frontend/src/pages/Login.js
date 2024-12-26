@@ -1,17 +1,19 @@
 import React from "react";
 import loginIcon from "../assets/signin.gif";
 import { FaEye } from "react-icons/fa";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { FaEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import summaryAPI from "../common";
 import { toast } from "react-toastify";
+import Context from "../context/index.";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [data, setData] = useState({ email: "", password: "" });
   const navigate = useNavigate();
+  const { fetchUserDetails } = useContext(Context);
 
   const handleDataChange = (e) => {
     const { name, value } = e.target;
@@ -29,6 +31,7 @@ const Login = () => {
         if (res.data.success) {
           toast.success(res.data.message);
           navigate("/");
+          fetchUserDetails();
         } else {
           toast.error(res.data.message);
         }
